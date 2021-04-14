@@ -11,15 +11,18 @@ import ARKit
 
 
 struct ContentView : View {
+    @State private var anchors: [ARAnchor] = []
+    
     var body: some View {
-        return ARViewContainer().edgesIgnoringSafeArea(.all)
+         ARViewContainer(anchors: self.$anchors)
+            .edgesIgnoringSafeArea(.all)
     }
 }
 
 struct ARViewContainer: UIViewRepresentable {
+    @Binding var anchors: [ARAnchor]
     
     class Coordinator: NSObject, ARSessionDelegate {
-        
         var parent: ARViewContainer
 
         init(_ parent: ARViewContainer) {
@@ -27,11 +30,13 @@ struct ARViewContainer: UIViewRepresentable {
         }
 
         func session(_ session: ARSession, didAdd anchors: [ARAnchor]) {
-           print("Anchor added")
+            print("Anchor added")
+            self.parent.anchors = anchors
         }
         
         func session(_ session: ARSession, didUpdate anchors: [ARAnchor]) {
             print("Anchor updated")
+            self.parent.anchors = anchors
         }
     }
     
@@ -55,6 +60,7 @@ struct ARViewContainer: UIViewRepresentable {
         configuration.maximumNumberOfTrackedImages = 1
         configuration.planeDetection = ARWorldTrackingConfiguration.PlaneDetection.init()
         arView.session.run(configuration, options: [.resetTracking, .removeExistingAnchors])
+        arView.session.delegate = context.coordinator
         return arView
         
     }
