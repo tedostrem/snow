@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		90A99D76262AF16D000B3845 /* art.scnassets in Resources */ = {isa = PBXBuildFile; fileRef = 90A99D75262AF16D000B3845 /* art.scnassets */; };
 		9F14A87B2620449600D4E81A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F14A87A2620449600D4E81A /* AppDelegate.swift */; };
 		9F14A87D2620449600D4E81A /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F14A87C2620449600D4E81A /* ContentView.swift */; };
 		9F14A87F2620449600D4E81A /* Experience.rcproject in Sources */ = {isa = PBXBuildFile; fileRef = 9F14A87E2620449600D4E81A /* Experience.rcproject */; };
@@ -34,6 +35,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		90A99D75262AF16D000B3845 /* art.scnassets */ = {isa = PBXFileReference; lastKnownFileType = wrapper.scnassets; path = art.scnassets; sourceTree = "<group>"; };
 		9F14A8772620449600D4E81A /* Snow.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Snow.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9F14A87A2620449600D4E81A /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		9F14A87C2620449600D4E81A /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -97,6 +99,7 @@
 		9F14A8792620449600D4E81A /* Snow */ = {
 			isa = PBXGroup;
 			children = (
+				90A99D75262AF16D000B3845 /* art.scnassets */,
 				9F14A87A2620449600D4E81A /* AppDelegate.swift */,
 				9F14A87C2620449600D4E81A /* ContentView.swift */,
 				9F14A87E2620449600D4E81A /* Experience.rcproject */,
@@ -237,6 +240,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				9F14A8842620449900D4E81A /* Preview Assets.xcassets in Resources */,
+				90A99D76262AF16D000B3845 /* art.scnassets in Resources */,
 				9F14A8812620449900D4E81A /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -423,7 +427,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_ASSET_PATHS = "\"Snow/Preview Content\"";
-				DEVELOPMENT_TEAM = 49479XX86V;
+				DEVELOPMENT_TEAM = NEQ3CNABJG;
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = Snow/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -444,7 +448,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_ASSET_PATHS = "\"Snow/Preview Content\"";
-				DEVELOPMENT_TEAM = 49479XX86V;
+				DEVELOPMENT_TEAM = NEQ3CNABJG;
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = Snow/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
