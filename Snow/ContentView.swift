@@ -10,33 +10,35 @@ import RealityKit
 import ARKit
 
 
+extension ARAnchor: Identifiable {
+    public var id: String {
+        self.identifier.uuidString
+    }
+}
+
 struct ContentView : View {
-    @State private var anchors: [ARAnchor] = []
-    
     var body: some View {
-         ARViewContainer(anchors: self.$anchors)
+        ARSCNViewContainer()
             .edgesIgnoringSafeArea(.all)
     }
 }
 
-struct ARViewContainer: UIViewRepresentable {
-    @Binding var anchors: [ARAnchor]
+struct ARSCNViewContainer: UIViewRepresentable {
     
-    class Coordinator: NSObject, ARSessionDelegate {
-        var parent: ARViewContainer
-
-        init(_ parent: ARViewContainer) {
+    class Coordinator: NSObject, ARSCNViewDelegate {
+        var parent: ARSCNViewContainer
+        
+        init(_ parent: ARSCNViewContainer) {
             self.parent = parent
         }
-
-        func session(_ session: ARSession, didAdd anchors: [ARAnchor]) {
-            print("Anchor added")
-            self.parent.anchors = anchors
-        }
         
-        func session(_ session: ARSession, didUpdate anchors: [ARAnchor]) {
-            print("Anchor updated")
-            self.parent.anchors = anchors
+        func renderer(_ renderer: SCNSceneRenderer, nodeFor anchor: ARAnchor) -> SCNNode? {
+            let node = SCNNode()
+            let shipScene = SCNScene(named: "art.scnassets/push_up.scn")!
+            for childNode in shipScene.rootNode.childNodes {
+                node.addChildNode(childNode)
+            }
+            return node
         }
     }
     
@@ -44,72 +46,30 @@ struct ARViewContainer: UIViewRepresentable {
         Coordinator(self)
     }
     
-    func makeUIView(context: Context) -> ARView {
-        let arView = ARView(frame: .zero, cameraMode: .ar, automaticallyConfigureSession: false)
-        arView.enableTapGesture()
-        
+    func makeUIView(context: Context) -> ARSCNView {
+        let sceneView = ARSCNView(frame: .zero)
         guard let trackedImages = ARReferenceImage.referenceImages(inGroupNamed: "ImageAnchors", bundle: Bundle.main) else {
             print("No ImageAnchors found")
-            return arView
+            return sceneView
         }
-        
-        print(trackedImages)
         
         let configuration = ARWorldTrackingConfiguration()
         configuration.detectionImages = trackedImages
         configuration.maximumNumberOfTrackedImages = 1
         configuration.planeDetection = ARWorldTrackingConfiguration.PlaneDetection.init()
-        arView.session.run(configuration, options: [.resetTracking, .removeExistingAnchors])
-        arView.session.delegate = context.coordinator
-        return arView
+        
+        let scene = SCNScene()
+        sceneView.scene = scene
+        sceneView.delegate = context.coordinator
+        sceneView.session.run(configuration, options: [.resetTracking, .removeExistingAnchors])
+        
+        return sceneView
+    }
+    
+    func updateUIView(_ uiView: ARSCNView, context: Context) {
         
     }
-    
-    func updateUIView(_ uiView: ARView, context: Context) {}
-    
 }
-
-extension ARView {
-
-    
-    func enableTapGesture() {
-        let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(handleTap(recognizer:)))
-        self.addGestureRecognizer(tapGestureRecognizer)
-    }
-    
-    @objc func handleTap(recognizer: UITapGestureRecognizer) {
-        let tapLocation = recognizer.location(in: self)
-        guard let rayResult = self.ray(through: tapLocation) else { return }
-        let results = self.scene.raycast(origin: rayResult.origin, direction: rayResult.direction)
-        if let firstResult = results.first {
-            // Raycast intersected with AR object
-            // Place object ontop of existing AR object
-            var position = firstResult.position
-            position.y += 0.1/2
-            placeCube(at: position)
-        } else {
-            // Raycast has not intersected with AR object
-            // Place a new object on a real world surface if there is one detected
-            let results = self.raycast(from: tapLocation, allowing: .estimatedPlane, alignment: .any)
-            if let firstResult = results.first {
-                let position = simd_make_float3(firstResult.worldTransform.columns.3)
-                placeCube(at: position)
-            }
-        }
-        print("tap tap!")
-    }
-    
-    func placeCube(at position: SIMD3<Float>) {
-        let mesh = MeshResource.generateBox(size: 0.1)
-        let material = SimpleMaterial(color: .white, roughness: 0.1, isMetallic: true)
-        let modelEntity = ModelEntity(mesh: mesh, materials: [material])
-        modelEntity.generateCollisionShapes(recursive: true)
-        let anchorEntity = AnchorEntity(world: position)
-        anchorEntity.addChild(modelEntity)
-        self.scene.addAnchor(anchorEntity)
-    }
-}
-
 
 #if DEBUG
 struct ContentView_Previews : PreviewProvider {
